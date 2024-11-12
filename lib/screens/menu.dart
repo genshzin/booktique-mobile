@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:booktique_mobile/widgets/item_card.dart';
+import 'package:booktique_mobile/widgets/left_drawer.dart';
 
 // Widget utama yang menampilkan halaman beranda aplikasi
 class MyHomePage extends StatelessWidget {
@@ -29,8 +31,8 @@ class MyHomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor: Colors.white,
       // Konten utama halaman
+      drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -109,77 +111,6 @@ class InfoCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// Kelas untuk menyimpan data item menu
-class ItemHomepage {
-  final String name;
-  final IconData icon;
-
-  ItemHomepage(this.name, this.icon);
-}
-
-// Widget untuk menampilkan kartu menu
-class ItemCard extends StatelessWidget {
-  final ItemHomepage item;
-
-  const ItemCard(this.item, {super.key});
-
-  // Fungsi untuk menentukan warna background kartu berdasarkan jenis menu
-  Color _getColorForItem(BuildContext context) {
-    switch (item.name) {
-      case "Lihat Daftar Produk":
-        return Colors.black;
-      case "Tambah Produk":
-        return Colors.teal.shade900;
-      case "Logout":
-        return Colors.red.shade900;
-      default:
-        return Theme.of(context).colorScheme.secondary;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: _getColorForItem(context),
-      borderRadius: BorderRadius.circular(12),
-      // Menambahkan efek sentuhan pada kartu
-      child: InkWell(
-        onTap: () {
-          // Menampilkan snackbar saat kartu ditekan
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!")),
-            );
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Ikon menu
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                // Teks menu
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
