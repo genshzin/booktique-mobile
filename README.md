@@ -718,12 +718,12 @@ Pada tugas 8, saya telah mengimplementasikan *navigation*, *layout*, *form*, dan
    }
    ```
    - Endpoint Django di `views.py` memfilter item berdasarkan user:
-  ```python
-  def show_json(request):
-    data = Product.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
-  
-  ```
+     ```python
+     def show_json(request):
+       data = Product.objects.filter(user=request.user)
+       return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+     
+     ```
 ### Pertanyaan
 
 1. **Mengapa perlu membuat model untuk data JSON?**
