@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:booktique_mobile/screens/menu.dart';
 import 'package:booktique_mobile/screens/itementry_form.dart';
+import 'package:booktique_mobile/screens/list_product.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -50,8 +51,8 @@ class LeftDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.book),
-            title: const Text('Tambah Item'),
+            leading: const Icon(Icons.format_list_bulleted_add),
+            title: const Text('Tambah Produk'),
             onTap: () {
               Navigator.pushReplacement(
                   context,
@@ -59,7 +60,18 @@ class LeftDrawer extends StatelessWidget {
                     builder: (context) => ItemEntryFormPage(),
                   ));
             },
-          ),  
+          ),
+          ListTile(
+            leading: const Icon(Icons.format_list_bulleted),
+            title: const Text('Daftar Produk'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductPage(),
+                  ));
+            },
+          ),
         ],
       ),
     );
