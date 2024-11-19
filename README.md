@@ -637,3 +637,144 @@ Pada tugas 8, saya telah mengimplementasikan *navigation*, *layout*, *form*, dan
    - Ketika pengguna menekan tombol "Tambah Produk" pada halaman utama, saya menggunakan `Navigator.push()` untuk mengarahkan pengguna ke halaman formulir tambah item baru (`ItemEntryFormPage`).
 
    - Saat pengguna memilih opsi "Halaman Utama" atau "Tambah Item" pada drawer, saya menggunakan `Navigator.pushReplacement()` untuk mengganti halaman saat ini dengan halaman yang baru dipilih.
+
+## Tugas 9
+
+### Implementasi
+
+1. **Membuat Model Kustom untuk Aplikasi**
+   - Membuat model `Product` di `lib/models/product.dart` untuk menyimpan data produk:
+   ```dart
+   class Product {
+     String model;
+     String pk;
+     Fields fields;
+     // ...existing code...
+   }
+
+   class Fields {
+     int user;
+     String name;
+     String author;
+     String description;
+     int stockQuantity;
+     int price;
+     // ...existing code...
+   }
+   ```
+
+2. **Mengimplementasikan Authentication**
+   - Membuat halaman login di `lib/screens/login.dart`
+   - Menggunakan `provider` dan `pbp_django_auth` untuk manajemen state dan autentikasi:
+   ```dart
+   // Di main.dart
+   return Provider(
+     create: (_) {
+       CookieRequest request = CookieRequest();
+       return request;
+     }
+     // ...existing code...
+   )
+   ```
+
+3. **Membuat Halaman Daftar Produk**
+   - Mengimplementasikan `ProductPage` di `lib/screens/list_product.dart`
+   - Mengambil data JSON dari Django menggunakan `fetchProduct`:
+   ```dart
+   Future<List<Product>> fetchProduct(CookieRequest request) async {
+     final response = await request.get('http://10.0.2.2:8000/json/');
+     // ...existing code...
+   }
+   ```
+
+4. **Implementasi Detail Produk**
+   - Membuat `ProductDetailPage` di `lib/screens/product_detail.dart`
+   - Menampilkan detail lengkap produk dengan layout yang terstruktur:
+   ```dart
+   Column(
+     children: [
+       Text(product.fields.name),
+       DetailRow(icon: Icons.person, text: product.fields.author),
+       // ...existing code...
+     ]
+   )
+   ```
+
+5. **Filter Item Berdasarkan User Login**
+   - Mengambil endpoint Django di `list_product.dart` untuk hanya mengembalikan item milik user yang login:
+   ```dart
+   Future<List<Product>> fetchProduct(CookieRequest request) async {
+     // Menggunakan endpoint yang mengembalikan item berdasarkan user yang login
+     final response = await request.get('http://10.0.2.2:8000/json/');
+     
+     // Parse response menjadi list products
+     List<Product> listProduct = [];
+     for (var d in jsonDecode(response)) {
+       if (d != null) {
+         listProduct.add(Product.fromJson(d));
+       }
+     }
+     return listProduct;
+   }
+   ```
+   - Endpoint Django di `views.py` memfilter item berdasarkan user:
+  ```python
+  def show_json(request):
+    data = Product.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+  
+  ```
+### Pertanyaan
+
+1. **Mengapa perlu membuat model untuk data JSON?**
+   - Model diperlukan untuk:
+     - Memetakan data JSON ke objek Dart yang terstruktur
+     - Memudahkan akses dan manipulasi data
+     - Memberikan type safety
+     - Menghindari error runtime karena struktur data yang tidak sesuai
+   
+   Tanpa model, kita bisa menggunakan Map<String, dynamic> tapi beresiko:
+   - Tidak ada validasi tipe data
+   - Rawan typo saat mengakses properties
+   - Kode menjadi lebih sulit dimaintain
+
+2. **Fungsi dari CookieRequest**
+   - CookieRequest berfungsi untuk:
+     - Mengelola state autentikasi
+     - Menyimpan dan mengirim cookie session
+     - Membuat HTTP request dengan cookie yang konsisten
+   
+   Instance CookieRequest perlu dibagikan ke semua komponen karena:
+   - Menjaga konsistensi state autentikasi
+   - Memungkinkan akses ke session yang sama di seluruh aplikasi
+   - Mengoptimalkan penggunaan memori
+
+3. **Mekanisme Pengiriman Data Flutter**
+   1. Input data melalui form (ItemEntryFormPage)
+   2. Validasi input menggunakan FormKey
+   3. Konversi data ke JSON
+   4. Kirim data ke Django menggunakan CookieRequest
+   5. Terima response dari Django
+   6. Update UI berdasarkan response
+
+4. **Mekanisme Autentikasi**
+   - Login:
+     1. User input username dan password
+     2. Data dikirim ke Django endpoint
+     3. Django validasi credentials
+     4. Return response dengan cookie session
+     5. Flutter simpan cookie untuk request selanjutnya
+   
+   - Register:
+     1. User input data registrasi
+     2. Data dikirim ke Django endpoint
+     3. Django create user baru
+     4. Return success/error response
+     5. Redirect ke login page jika sukses
+   
+   - Logout:
+     1. Send request ke Django logout endpoint
+     2. Django clear session
+     3. Flutter clear cookie
+     4. Redirect ke login page
+
