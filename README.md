@@ -737,9 +737,18 @@ Pada tugas 8, saya telah mengimplementasikan *navigation*, *layout*, *form*, dan
    - Tidak ada validasi tipe data
    - Rawan typo saat mengakses properties
    - Kode menjadi lebih sulit dimaintain
+     
+2. **Fungsi Library HTTP**
+   Library HTTP digunakan untuk:
+   - Melakukan request HTTP (GET, POST, dll)
+   - Berkomunikasi dengan backend/API
+   - Mengirim dan menerima data dari server
+   - Menghandle koneksi jaringan
+   - Mendukung berbagai metode request
+   - Mengelola header dan parameter request
 
-2. **Fungsi dari CookieRequest**
-   - CookieRequest berfungsi untuk:
+3. **Fungsi dari CookieRequest**
+   CookieRequest berfungsi untuk:
      - Mengelola state autentikasi
      - Menyimpan dan mengirim cookie session
      - Membuat HTTP request dengan cookie yang konsisten
@@ -747,9 +756,11 @@ Pada tugas 8, saya telah mengimplementasikan *navigation*, *layout*, *form*, dan
    Instance CookieRequest perlu dibagikan ke semua komponen karena:
    - Menjaga konsistensi state autentikasi
    - Memungkinkan akses ke session yang sama di seluruh aplikasi
+   - Memudahkan manajemen autentikasi di berbagai halaman
+   - Mencegah multiple login/logout yang tidak konsisten
    - Mengoptimalkan penggunaan memori
 
-3. **Mekanisme Pengiriman Data Flutter**
+4. **Mekanisme Pengiriman Data Flutter**
    1. Input data melalui form (ItemEntryFormPage)
    2. Validasi input menggunakan FormKey
    3. Konversi data ke JSON
@@ -757,7 +768,7 @@ Pada tugas 8, saya telah mengimplementasikan *navigation*, *layout*, *form*, dan
    5. Terima response dari Django
    6. Update UI berdasarkan response
 
-4. **Mekanisme Autentikasi**
+5. **Mekanisme Autentikasi**
    - Login:
      1. User input username dan password
      2. Data dikirim ke Django endpoint
